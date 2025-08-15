@@ -71,6 +71,7 @@ const styles = StyleSheet.create({
         right: 0,
         bottom: 0,
         opacity: 0.55,
+            
     },
     blurBlob: {
         position: 'absolute',

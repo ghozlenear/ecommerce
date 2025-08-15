@@ -34,33 +34,31 @@ export default function OnboardingPage2() {
                     style={styles.logo} 
                     resizeMode="contain" 
                 />
-                
-                <TouchableOpacity style={styles.skipButton}>
-                    <Text style={styles.skipText}>skip</Text>
-                </TouchableOpacity>
             </View>
             <View style={styles.imageContainer}>
                 <View style={styles.imageBackground}>
                     <Image 
-                        source={require('../../assets/images/page2.png')} 
+                        source={require('../../assets/images/page3.png')} 
                         style={styles.onboardingImage} 
                         resizeMode="contain" 
                     />
                 </View>
             </View>
             <View style={styles.content}>
-                <Text style={styles.title}>Track Your Progress</Text>
+                <Text style={styles.title}>Shop with Confidence</Text>
                 <Text style={styles.description}>
-                    Monitor your skin's transformation with detailed insights and progress tracking.
+                Discover trusted products tailored to your skin type.
                 </Text>
+                <TouchableOpacity style={styles.primaryButton} onPress={() => router.replace('/auth/login')}>
+                    <Text style={styles.primaryButtonText}>get started</Text>
+                </TouchableOpacity>
             </View>
             <View style={styles.footer}>
                 <View style={styles.pagination}>
                     <View style={styles.dot} />
-                    <View style={styles.dotActive} />
                     <View style={styles.dot} />
+                    <View style={styles.dotActive} />
                 </View>
-               
             </View>
         </View>
     );
@@ -95,9 +93,9 @@ const styles = StyleSheet.create({
         paddingTop: 40,
     },
     logo: {
-        width: 120,
-        height: 60,
-        marginBottom: 8,
+        width: 319,
+        height: 255,
+        marginTop: 20,
     },
     tagline: {
         fontSize: 16,
@@ -110,12 +108,16 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 40,
         right: 0,
+        backgroundColor: 'transparent',
+        paddingVertical: 8,
+        paddingHorizontal: 12,
     },
     skipText: {
         fontSize: 14,
         fontFamily: 'Poppins_400Regular',
-        color: '#FADADD',
+        color: '#FFFFFF',
         textTransform: 'lowercase',
+        textDecorationLine: 'underline',
     },
     imageContainer: {
         flex: 1,
@@ -124,9 +126,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
     },
     imageBackground: {
-        width: '100%',
-        height: 400,
-        backgroundColor: '#FADADD',
+        width: 304,
+        height: 460,
         borderRadius: 30,
         overflow: 'hidden',
     },
@@ -136,13 +137,14 @@ const styles = StyleSheet.create({
     },
     content: {
         paddingHorizontal: 20,
-        paddingBottom: 30,
+        paddingBottom: 20,
     },
     title: {
         fontSize: 24,
         fontFamily: 'Poppins_600SemiBold',
         color: '#333',
         textAlign: 'center',
+        marginTop: 20,
         marginBottom: 10,
     },
     description: {
@@ -194,4 +196,36 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 3,
     },
+    primaryButton: {
+        backgroundColor: '#F08080',
+        alignSelf: 'center',
+        paddingHorizontal: 24,
+        paddingVertical: 10,
+        borderRadius: 22,
+        marginTop: 12,
+        shadowColor: '#000',
+        shadowOpacity: 0.15,
+        shadowRadius: 8,
+        shadowOffset: { width: 0, height: 2 },
+        elevation: 2
+    },
+    primaryButtonText: {
+        color: '#FFFFFF',
+        fontSize: 16,
+        fontFamily: 'Poppins_600SemiBold',
+        textTransform: 'lowercase'
+    },
+    backButton: {
+        backgroundColor: '#FFFFFF',
+        width: 36,
+        height: 36,
+        borderRadius: 18,
+        alignItems: 'center',
+        justifyContent: 'center',
+        shadowColor: '#000',
+        shadowOpacity: 0.12,
+        shadowRadius: 6,
+        shadowOffset: { width: 0, height: 2 },
+        elevation: 2
+    }
 });

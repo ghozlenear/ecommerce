@@ -152,6 +152,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Poppins_600SemiBold',
         color: '#333',
         textAlign: 'center',
+        marginTop: 20,
         marginBottom: 10,
     },
     description: {
