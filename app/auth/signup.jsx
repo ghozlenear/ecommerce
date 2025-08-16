@@ -12,7 +12,6 @@ export default function SignupScreen() {
 					style={styles.logo}
 					resizeMode="contain"
 				/>
-				<Text style={styles.tagline}>Glow Up, Your Way</Text>
 			</View>
 
 			<View style={styles.form}>
@@ -83,22 +82,9 @@ const styles = StyleSheet.create({
 		marginBottom: 16,
 	},
 	logo: {
-		width: 220,
-		height: 140,
+		width: 503,
+		height: 250,
 		marginBottom: 4,
-	},
-	tagline: {
-		fontSize: 16,
-		color: '#F4A7B9',
-		fontStyle: 'italic',
-	},
-	form: {
-		marginTop: 12,
-	},
-	label: {
-		fontSize: 14,
-		color: '#333333',
-		marginBottom: 8,
 	},
 	input: {
 		backgroundColor: '#FFFFFF',
