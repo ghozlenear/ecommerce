@@ -55,7 +55,7 @@ export default function SignupScreen() {
 					secureTextEntry
 				/>
 
-				<TouchableOpacity style={styles.primaryButton} onPress={() => {}}>
+				<TouchableOpacity style={styles.primaryButton} onPress={() => router.push('/tabs/index')}>
 					<Text style={styles.primaryButtonText}>Sign up</Text>
 				</TouchableOpacity>
 			</View>

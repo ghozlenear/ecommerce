@@ -38,7 +38,7 @@ export default function LoginScreen() {
                     <Text style={styles.forgotText}>Forgot password?</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.primaryButton} onPress={() => {}}>
+                <TouchableOpacity style={styles.primaryButton} onPress={() => router.push('/tabs/index')}>
                     <Text style={styles.primaryButtonText}>Login</Text>
                 </TouchableOpacity>
             </View>
