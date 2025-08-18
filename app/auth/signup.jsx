@@ -55,7 +55,7 @@ export default function SignupScreen() {
 					secureTextEntry
 				/>
 
-				<TouchableOpacity style={styles.primaryButton} onPress={() => router.push('/tabs/index')}>
+				<TouchableOpacity style={styles.primaryButton} onPress={() => router.push('/tabs/home')}>
 					<Text style={styles.primaryButtonText}>Sign up</Text>
 				</TouchableOpacity>
 			</View>
@@ -79,12 +79,11 @@ const styles = StyleSheet.create({
 	},
 	header: {
 		alignItems: 'center',
-		marginBottom: 16,
+		
 	},
 	logo: {
 		width: 503,
-		height: 250,
-		marginBottom: 4,
+		height: 300,
 	},
 	input: {
 		backgroundColor: '#FFFFFF',

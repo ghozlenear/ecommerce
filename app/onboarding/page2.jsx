@@ -114,14 +114,15 @@ const styles = StyleSheet.create({
     },
     skipButton: {
         position: 'absolute',
-        top: 40,
+        top: 20,
         right: 0,
         backgroundColor: 'transparent',
         paddingVertical: 8,
         paddingHorizontal: 12,
     },
     skipText: {
-        fontSize: 14,
+        fontSize: 20,
+        textDecorationLine: 'underline',
         fontFamily: 'Poppins_400Regular',
         color: '#FFFFFF',
         textTransform: 'lowercase',

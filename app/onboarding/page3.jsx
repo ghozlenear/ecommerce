@@ -95,14 +95,7 @@ const styles = StyleSheet.create({
     logo: {
         width: 319,
         height: 255,
-        marginTop: 20,
-    },
-    tagline: {
-        fontSize: 16,
-        fontFamily: 'Poppins_400Regular',
-        color: '#000',
-        fontStyle: 'italic',
-        marginBottom: 20,
+      
     },
     skipButton: {
         position: 'absolute',
@@ -137,14 +130,14 @@ const styles = StyleSheet.create({
     },
     content: {
         paddingHorizontal: 20,
-        paddingBottom: 20,
+        paddingBottom: 30,
     },
     title: {
-        fontSize: 24,
+        fontSize: 29,
         fontFamily: 'Poppins_600SemiBold',
         color: '#333',
         textAlign: 'center',
-        marginTop: 20,
+        marginTop: 40,
         marginBottom: 10,
     },
     description: {
@@ -172,6 +165,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#FFFFFF',
         marginHorizontal: 4,
+        marginBottom: 20,
     },
     dotActive: {
         width: 8,
