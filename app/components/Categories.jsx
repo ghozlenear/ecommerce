@@ -7,7 +7,7 @@ export default function Categories({data}) {
         <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        style={StyleSheet.categoriesContainer} >
+        style={styles.categoriesContainer} >
             {data.map((item, index) =>(
                 <TouchableOpacity key={index} style={styles.categoryCard}>
                     <Ionicons name={item.icon} size={40} color="#49454F"/>
@@ -41,7 +41,6 @@ const styles = StyleSheet.create({
     categoryText: {
       marginTop: 5,
       fontSize: 14,
-      fontFamily: 'Poppins_400Regular',
       fontWeight: "600",
       color: "#333",
     },

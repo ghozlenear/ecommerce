@@ -20,11 +20,11 @@ export default function Carousel({ images }) {
 
 const styles = StyleSheet.create({
   carouselContainer: {
-    marginBottom: -390,
+    marginBottom: 20,
   },
   carouselImage: {
-    width: 412 - 40, 
-    height: 150,
+    width: width - 40, 
+    height: 180,
     borderRadius: 15,
     marginRight: 15,
   },
