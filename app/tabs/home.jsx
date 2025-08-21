@@ -1,9 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
-import React from "react";
+import React, { useState } from "react";
 import { FlatList, Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { TextInput } from "react-native-web";
 import Carousel from "../components/Carousel";
 import Categories from "../components/Categories";
+import ProductCard from "../components/ProductCard";
 
 const categoriesData=[
   { title: "Skincare", icon: "happy-outline" },
@@ -13,6 +14,47 @@ const categoriesData=[
 ];
 
 export default function HomeScreen() {
+  const [favorites, setFavorites] = useState([]);
+  const [cartItems, setCartItems] = useState([]);
+
+  const products = [
+    { id: "1", name: "SKIN 1004 - Madagascar Centella Deep Cleansing Foam", price: "1,509.20 DA", image: "https://via.placeholder.com/150", rating: 5 },
+    { id: "2", name: "Anua Peach 70% Niacinamide Serum", price: "2,300.00 DA", image: "https://via.placeholder.com/150", rating: 4 },
+    { id: "3", name: "Vaseline Cocoa Radiant Gel Oil", price: "3,000.00 DA", image: "https://via.placeholder.com/150", rating: 5 },
+    { id: "4", name: "Chloé Rosa Damascena", price: "4,200.00 DA", image: "https://via.placeholder.com/150", rating: 4 },
+  ];
+
+  const toggleFavorite = (productId) => {
+    const product = products.find(p => p.id === productId);
+    if (product) {
+      if (favorites.some(item => item.id === productId)) {
+        // Remove from favorites
+        setFavorites(favorites.filter(item => item.id !== productId));
+      } else {
+        // Add to favorites
+        setFavorites([...favorites, product]);
+      }
+    }
+  };
+
+  const addToCart = (productId) => {
+    const product = products.find(p => p.id === productId);
+    if (product) {
+      const existingItem = cartItems.find(item => item.id === productId);
+      if (existingItem) {
+        // Increase quantity if already in cart
+        setCartItems(cartItems.map(item => 
+          item.id === productId 
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        ));
+      } else {
+        // Add new item to cart
+        setCartItems([...cartItems, { ...product, quantity: 1 }]);
+      }
+    }
+  };
+
   return (
     <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
       <View style={styles.container}>
@@ -54,42 +96,42 @@ export default function HomeScreen() {
         <View style={styles.productsSection}>
           <Text style={styles.sectionTitle}>Self-Care Spotlight</Text>
           <FlatList
-            data={[
-              { id: "1", name: "Product 1", price: "1,500.00 DA", image: "https://via.placeholder.com/150" },
-              { id: "2", name: "Product 2", price: "2,300.00 DA", image: "https://via.placeholder.com/150" },
-              { id: "3", name: "Product 3", price: "3,000.00 DA", image: "https://via.placeholder.com/150" },
-              { id: "4", name: "Product 4", price: "4,200.00 DA", image: "https://via.placeholder.com/150" },
-            ]}
+            data={products}
+            renderItem={({ item }) => (
+              <ProductCard
+                item={item}
+                isFavorited={favorites.some(fav => fav.id === item.id)}
+                onToggleFavorite={toggleFavorite}
+                onAddToCart={addToCart}
+              />
+            )}
             keyExtractor={(item) => item.id}
             numColumns={2}
             scrollEnabled={false}
             columnWrapperStyle={{ justifyContent: "space-between" }}
-            renderItem={({ item }) => (
-              <View style={styles.productCard}>
-                <Image source={{ uri: item.image }} style={styles.productImage} />
-                <Text style={styles.productTitle}>{item.name}</Text>
-                <Text style={styles.productPrice}>{item.price}</Text>
-              </View>
-            )}
           />
         </View>
+
         <View style={styles.tipsSection}>
           <Text style={styles.sectionTitle}>Glow-Up Tips</Text>
           <FlatList
-          data={[
-            { id: "1", title: "Stay Hydrated", tip: "Drink at least 2L of water daily " },
-            { id: "2", title: "Skincare Routine", tip: "Cleanse, tone & moisturize twice a day " },
-            { id: "3", title: "Beauty Sleep", tip: "Get 7–8 hours of quality rest " },
-            { id: "4", title: "Eat Clean", tip: "Incorporate fruits & veggies in your diet " },
-          ]}
-          keyEctractor={(item)=>item.id}
-          scrollEnabled={false}
-          renderItem={({item})=>(
-            <View style={styles.tipCard}>
-              <Text style={styles.tipTitle}>{item.title}</Text>
-              <Text style={styles.tipText}>{item.tip}</Text>
+            data={[
+              { id: "1", title: "Stay Hydrated", tip: "Drink at least 2L of water daily", icon: "water-outline" },
+              { id: "2", title: "Skincare Routine", tip: "Cleanse, tone & moisturize twice a day", icon: "sparkles-outline" },
+              { id: "3", title: "Beauty Sleep", tip: "Get 7–8 hours of quality rest", icon: "moon-outline" },
+              { id: "4", title: "Eat Clean", tip: "Incorporate fruits & veggies in your diet", icon: "leaf-outline" },
+            ]}
+            keyExtractor={(item) => item.id}
+            scrollEnabled={false}
+            renderItem={({item}) => (
+              <View style={styles.tipCard}>
+                <View style={styles.tipHeader}>
+                  <Ionicons name={item.icon} size={24} color="#ff6b81" style={styles.tipIcon} />
+                  <Text style={styles.tipTitle}>{item.title}</Text>
+                </View>
+                <Text style={styles.tipText}>{item.tip}</Text>
               </View>
-          )}
+            )}
           />
         </View>
       </View>
@@ -156,62 +198,46 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   productsSection: {
-    marginBottom:20,
+    marginBottom: 30,
   },
   sectionTitle: { 
-    fontSize: 20, 
+    fontSize: 22, 
     fontWeight: '800', 
-    marginBottom: 12 
-  },
-  productCard: {
-    backgroundColor: "#fde2e4",
-    borderRadius: 15,
-    padding: 10,
-    marginBottom: 15,
-    width: "48%", 
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
-    elevation: 2,
-  },
-  productImage: {
-    width: "100%",
-    height: 120,
-    borderRadius: 10,
-    marginBottom: 8,
-  },
-  productTitle: {
-    fontSize: 14,
-    fontWeight: "600",
-    marginBottom: 4,
-    color: "#333",
-  },
-  productPrice: {
-    fontSize: 14,
-    fontWeight: "bold",
-    color: "#ff6b81",
+    marginBottom: 16,
+    color: "#2c3e50",
   },
   tipsSection: {
     marginBottom: 40,
   },
   tipCard: {
-    backgroundColor: "#fff0f5",
-    borderRadius: 12,
-    padding: 15,
-    marginBottom: 12,
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
-    elevation: 2,
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    padding: 18,
+    marginBottom: 15,
+    shadowColor: "#ff6b81",
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+    borderLeftWidth: 4,
+    borderLeftColor: "#ff6b81",
+  },
+  tipHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 6,
+  },
+  tipIcon: {
+    marginRight: 8,
   },
   tipTitle: {
     fontSize: 16,
     fontWeight: "700",
     color: "#ff6b81",
-    marginBottom: 6,
   },
   tipText: {
     fontSize: 14,
-    color: "#444",
+    color: "#555",
+    lineHeight: 20,
+    paddingLeft: 32,
   },
 });
