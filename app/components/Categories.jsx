@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
     categoryText: {
       marginTop: 5,
       fontSize: 14,
+      fontFamily: "System",
       fontWeight: "600",
       color: "#333",
     },

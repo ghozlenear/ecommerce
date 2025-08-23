@@ -1,15 +1,67 @@
 // app/product/[id].jsx
-import { useLocalSearchParams } from 'expo-router';
-import React, { useState } from 'react';
-import { View, Text, Image, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import React, { useState } from 'react';
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams();
+  const router = useRouter();
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('Description');
+  const [showCartOverlay, setShowCartOverlay] = useState(false);
+  const [cartItems, setCartItems] = useState([
+    {
+      id: id,
+      name: "Peach 70% Niacinamide Serum",
+      brand: "Anua",
+      price: "2,112.88 DA",
+      image: "https://via.placeholder.com/300",
+      quantity: 1
+    }
+  ]);
   
-  // Fetch product data based on id
+  const handleBack = () => {
+    router.back(); 
+  };
+
+  const toggleCartOverlay = () => {
+    setShowCartOverlay(!showCartOverlay);
+  };
+
+  const removeFromCart = (itemId) => {
+    setCartItems(cartItems.filter(item => item.id !== itemId));
+    if (cartItems.length === 1) {
+      setShowCartOverlay(false);
+    }
+  };
+
+  const addToCart = () => {
+    const existingItem = cartItems.find(item => item.id === product.id);
+    if (existingItem) {
+      setCartItems(cartItems.map(item => 
+        item.id === product.id 
+          ? { ...item, quantity: item.quantity + quantity }
+          : item
+      ));
+    } else {
+      setCartItems([...cartItems, { 
+        ...product, 
+        quantity: quantity 
+      }]);
+    }
+  };
+
+  const updateQuantity = (itemId, newQuantity) => {
+    if (newQuantity <= 0) {
+      removeFromCart(itemId);
+      return;
+    }
+    setCartItems(cartItems.map(item => 
+      item.id === itemId ? { ...item, quantity: newQuantity } : item
+    ));
+  };
+  
   const product = {
     id: id,
     name: "Peach 70% Niacinamide Serum",
@@ -18,25 +70,73 @@ export default function ProductDetailScreen() {
     rating: 4.5,
     reviews: 100,
     image: "https://via.placeholder.com/300",
-    description: "Lorem ipsum...",
-    howToUse: "Apply 2-3 drops...",
+    description: " Blah BLAH BLAH",
+    howToUse: "BLAH BLAH BLAH",
     reviews: []
   };
 
   return (
     <View style={styles.container}>
-      {/* Navigation Bar */}
       <View style={styles.navBar}>
-        <TouchableOpacity style={styles.navButton}>
+        <TouchableOpacity style={styles.navButton} onPress={handleBack}>
           <Ionicons name="arrow-back" size={24} color="#333" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton}>
+        <TouchableOpacity style={styles.navButton} onPress={toggleCartOverlay}>
           <Ionicons name="cart" size={24} color="#333" />
-          <View style={styles.cartBadge} />
+          {cartItems.length > 0 && (
+            <View style={styles.cartBadge}>
+              <Text style={styles.cartBadgeText}>
+                {cartItems.reduce((total, item) => total + item.quantity, 0)}
+              </Text>
+            </View>
+          )}
         </TouchableOpacity>
       </View>
+      {showCartOverlay && (
+        <View style={styles.overlay}>
+          <TouchableOpacity style={styles.overlayBackground} onPress={toggleCartOverlay} />
+          <View style={styles.cartOverlay}>
+            <View style={styles.cartHeader}>
+              <Text style={styles.cartTitle}>My Cart</Text>
+              <TouchableOpacity onPress={toggleCartOverlay}>
+                <Ionicons name="close" size={24} color="#333" />
+              </TouchableOpacity>
+            </View>
+            
+            {cartItems.length > 0 ? (
+              <>
+                {cartItems.map((item) => (
+                  <View key={item.id} style={styles.cartItem}>
+                    <Image source={{ uri: item.image }} style={styles.cartItemImage} />
+                    <View style={styles.cartItemInfo}>
+                      <Text style={styles.cartItemBrand}>{item.brand}</Text>
+                      <Text style={styles.cartItemName}>{item.name}</Text>
+                      <Text style={styles.cartItemPrice}>{item.price}</Text>
+                      <Text style={styles.quantityText}>Quantity: {item.quantity}</Text>
+                    </View>
+                    <TouchableOpacity 
+                      style={styles.removeButton}
+                      onPress={() => removeFromCart(item.id)}
+                    >
+                      <Text style={styles.removeText}>Remove</Text>
+                    </TouchableOpacity>
+                  </View>
+                ))}
 
-      {/* Product Image */}
+                <TouchableOpacity style={styles.checkoutButton}>
+                  <Text style={styles.checkoutText}>Checkout</Text>
+                </TouchableOpacity>
+              </>
+            ) : (
+              <View style={styles.emptyCart}>
+                <Text style={styles.emptyCartText}>Your cart is empty</Text>
+              </View>
+            )}
+          </View>
+        </View>
+      )}
+
+      
       <View style={styles.imageSection}>
         <Image source={{ uri: product.image }} style={styles.productImage} />
         <View style={styles.paginationDots}>
@@ -46,7 +146,7 @@ export default function ProductDetailScreen() {
         </View>
       </View>
 
-      {/* Product Details */}
+
       <ScrollView style={styles.detailsSection}>
         <View style={styles.productHeader}>
           <View>
@@ -69,7 +169,6 @@ export default function ProductDetailScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Tabs */}
         <View style={styles.tabs}>
           {['Description', 'How To Use', 'Reviews'].map((tab) => (
             <TouchableOpacity
@@ -84,7 +183,7 @@ export default function ProductDetailScreen() {
           ))}
         </View>
 
-        {/* Tab Content */}
+        
         <View style={styles.tabContent}>
           <Text style={styles.contentText}>
             {activeTab === 'Description' && product.description}
@@ -94,7 +193,7 @@ export default function ProductDetailScreen() {
         </View>
       </ScrollView>
 
-      {/* Bottom Action Bar */}
+      
       <View style={styles.actionBar}>
         <Text style={styles.price}>{product.price}</Text>
         <View style={styles.quantitySelector}>
@@ -106,7 +205,7 @@ export default function ProductDetailScreen() {
             <Ionicons name="add" size={20} color="#333" />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.addToCartButton}>
+        <TouchableOpacity style={styles.addToCartButton} onPress={addToCart}>
           <Text style={styles.addToCartText}>Add To Cart</Text>
         </TouchableOpacity>
       </View>
@@ -124,7 +223,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 20,
-    paddingTop: 60,
+    paddingTop: 25,
   },
   navButton: {
     width: 40,
@@ -138,10 +237,17 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 5,
     right: 5,
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    width: 20, 
+    height: 20, 
+    borderRadius: 10,
     backgroundColor: '#ff0000',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cartBadgeText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
   },
   imageSection: {
     height: 300,
@@ -285,5 +391,113 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 16,
+  },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    zIndex: 10,
+  },
+  overlayBackground: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  cartOverlay: {
+    width: '90%',
+    backgroundColor: '#fff',
+    borderRadius: 15,
+    padding: 20,
+    position: 'relative',
+    zIndex: 11,
+  },
+  cartHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  cartTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  cartItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 15,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+  },
+  cartItemImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 10,
+    marginRight: 15,
+  },
+  cartItemInfo: {
+    flex: 1,
+  },
+  cartItemBrand: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 2,
+  },
+  cartItemName: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 5,
+  },
+  cartItemPrice: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#f7c8d0',
+  },
+  removeButton: {
+    backgroundColor: '#f0f0f0',
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  removeText: {
+    color: '#ff0000',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  checkoutButton: {
+    backgroundColor: '#f7c8d0',
+    paddingVertical: 15,
+    borderRadius: 25,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  checkoutText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  quantityText: {
+    fontSize: 14,
+    color: '#666',
+    marginTop: 5,
+  },
+  emptyCart: {
+    alignItems: 'center',
+    paddingVertical: 20,
+  },
+  emptyCartText: {
+    fontSize: 18,
+    color: '#999',
   },
 });

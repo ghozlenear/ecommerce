@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { FlatList, Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import { FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { TextInput } from "react-native-web";
 import Carousel from "../components/Carousel";
 import Categories from "../components/Categories";
@@ -42,14 +42,12 @@ export default function HomeScreen() {
     if (product) {
       const existingItem = cartItems.find(item => item.id === productId);
       if (existingItem) {
-        // Increase quantity if already in cart
         setCartItems(cartItems.map(item => 
           item.id === productId 
             ? { ...item, quantity: item.quantity + 1 }
             : item
         ));
       } else {
-        // Add new item to cart
         setCartItems([...cartItems, { ...product, quantity: 1 }]);
       }
     }
@@ -110,6 +108,10 @@ export default function HomeScreen() {
             scrollEnabled={false}
             columnWrapperStyle={{ justifyContent: "space-between" }}
           />
+          
+          <TouchableOpacity style={styles.loadMoreButton}>
+            <Text style={styles.loadMoreText}>Load More</Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.tipsSection}>
@@ -157,12 +159,14 @@ const styles = StyleSheet.create({
   },
   greeting: {
     fontSize: 28,
+    fontFamily: "System",
     fontWeight: "600",
     color: "#333",
     marginTop: 15,
   },
   subText: {
     fontSize: 14,
+    fontFamily: "System",
     fontWeight: "600",
     color: "#333",
   },
@@ -189,6 +193,8 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     flex: 1,
     fontSize: 16,
+    fontFamily: "System",
+    fontWeight: "500",
     color: "#333",
   },
   carouselSection: {
@@ -202,7 +208,8 @@ const styles = StyleSheet.create({
   },
   sectionTitle: { 
     fontSize: 22, 
-    fontWeight: '800', 
+    fontFamily: "System",
+    fontWeight: "800", 
     marginBottom: 16,
     color: "#2c3e50",
   },
@@ -231,13 +238,33 @@ const styles = StyleSheet.create({
   },
   tipTitle: {
     fontSize: 16,
+    fontFamily: "System",
     fontWeight: "700",
     color: "#ff6b81",
   },
   tipText: {
     fontSize: 14,
+    fontFamily: "System",
+    fontWeight: "400",
     color: "#555",
     lineHeight: 20,
     paddingLeft: 32,
+  },
+  loadMoreButton: {
+    backgroundColor: "#F7C8D0",
+    opacity: 0.80,
+    paddingVertical: 12,
+    paddingHorizontal: 25,
+    borderRadius: 12,
+    alignSelf: "center",
+    marginTop: 20,
+    borderWidth: 1,
+    borderColor: "#F7C8D0",
+  },
+  loadMoreText: {
+    color: "#fff",
+    fontSize: 16,
+    fontFamily: "System",
+    fontWeight: "700",
   },
 });

@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { FlatList, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import CartOverlay from "../components/CartOverlay"; // adjust path if needed
 import ProductCard from "../components/ProductCard"; // adjust path if needed
 
 
@@ -9,6 +10,7 @@ export default function SearchScreen() {
   const [selectedCategory, setSelectedCategory] = useState("ALL");
   const [favorites, setFavorites] = useState([]);
   const [cartItems, setCartItems] = useState([]);
+  const [showCartOverlay, setShowCartOverlay] = useState(false);
   const router = useRouter();
   
   const categories = ["ALL", "Skin", "Body", "Hair"];
@@ -78,6 +80,8 @@ export default function SearchScreen() {
   };
 
   const addToCart = (productId) => {
+    console.log('🚨 addToCart called with productId:', productId);
+    console.log('🚨 This should only happen when cart icon is clicked!');
     const product = products.find(p => p.id === productId);
     if (product) {
       const existingItem = cartItems.find(item => item.id === productId);
@@ -92,7 +96,16 @@ export default function SearchScreen() {
         // Add new item to cart
         setCartItems([...cartItems, { ...product, quantity: 1 }]);
       }
+      // Don't navigate to cart page, just add to cart
     }
+  };
+
+  const toggleCartOverlay = () => {
+    setShowCartOverlay(!showCartOverlay);
+  };
+
+  const removeFromCart = (itemId) => {
+    setCartItems(cartItems.filter(item => item.id !== itemId));
   };
 
   return (
@@ -100,32 +113,19 @@ export default function SearchScreen() {
       <View style={styles.container}>
         <View style={styles.headerRow}>
           <Text style={styles.title}>Search</Text>
-          <View style={styles.headerButtons}>
-            <TouchableOpacity 
-              style={styles.headerButton}
-              onPress={() => router.push("/tabs/fav")}
-            >
-              <Ionicons name="heart" size={24} color="#ff6b81" />
-              {favorites.length > 0 && (
-                <View style={styles.badge}>
-                  <Text style={styles.badgeText}>{favorites.length}</Text>
-                </View>
-              )}
-            </TouchableOpacity>
-            <TouchableOpacity 
-              style={styles.headerButton}
-              onPress={() => router.push("/tabs/cart")}
-            >
-              <Ionicons name="cart" size={24} color="#ff6b81" />
-              {cartItems.length > 0 && (
-                <View style={styles.badge}>
-                  <Text style={styles.badgeText}>
-                    {cartItems.reduce((total, item) => total + item.quantity, 0)}
-                  </Text>
-                </View>
-              )}
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity 
+            style={styles.cartButton}
+            onPress={toggleCartOverlay}
+          >
+            <Ionicons name="cart" size={24} color="#ff6b81" />
+            {cartItems.length > 0 && (
+              <View style={styles.cartBadge}>
+                <Text style={styles.cartBadgeText}>
+                  {cartItems.reduce((total, item) => total + item.quantity, 0)}
+                </Text>
+              </View>
+            )}
+          </TouchableOpacity>
         </View>
         
         <View style={styles.searchBox}>
@@ -178,6 +178,14 @@ export default function SearchScreen() {
           style={styles.productsGrid}
         />
       </View>
+      
+      {/* Cart Overlay */}
+      <CartOverlay
+        visible={showCartOverlay}
+        cartItems={cartItems}
+        onClose={toggleCartOverlay}
+        onRemoveItem={removeFromCart}
+      />
     </ScrollView>
   );
 }
@@ -198,32 +206,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 20,
   },
-  headerButtons: {
-    flexDirection: "row",
-    gap: 15,
-  },
-  headerButton: {
-    position: "relative",
-  },
-  badge: {
-    position: "absolute",
-    top: -5,
-    right: -5,
-    backgroundColor: "#ff6b81",
-    borderRadius: 10,
-    width: 20,
-    height: 20,
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 1,
-  },
-  badgeText: {
-    color: "#fff",
-    fontSize: 12,
-    fontWeight: "bold",
-  },
   title: { 
     fontSize: 28, 
+    fontFamily: "System",
     fontWeight: "800", 
     color: "#333"
   },
@@ -265,6 +250,7 @@ const styles = StyleSheet.create({
   categoryText: {
     fontSize: 14,
     fontWeight: "600",
+    fontFamily: "System",
     color: "#333",
   },
   categoryTextActive: {
@@ -275,5 +261,25 @@ const styles = StyleSheet.create({
   },
   productRow: {
     justifyContent: "space-between",
+  },
+  cartButton: {
+    position: "relative",
+  },
+  cartBadge: {
+    position: "absolute",
+    top: -5,
+    right: -5,
+    backgroundColor: "#ff6b81",
+    borderRadius: 10,
+    width: 20,
+    height: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1,
+  },
+  cartBadgeText: {
+    color: "#fff",
+    fontSize: 12,
+    fontWeight: "bold",
   },
 });

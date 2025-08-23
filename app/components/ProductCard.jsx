@@ -1,31 +1,47 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import React from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function ProductCard({ item, isFavorited, onToggleFavorite, onAddToCart }) {
+  const router = useRouter();
+
+  const handleProductPress = () => {
+    console.log('Product card pressed, navigating to:', `/product/${item.id}`);
+    router.push(`/product/${item.id}`);
+  };
+
+  const handleFavoritePress = () => {
+    console.log('Favorite button pressed for product:', item.id);
+    onToggleFavorite(item.id);
+  };
+
+  const handleCartPress = () => {
+    console.log('Cart button pressed for product:', item.id);
+    onAddToCart(item.id);
+  };
+
   return (
     <View style={styles.productCard}>
-      {/* Favorite button */}
-      <TouchableOpacity 
+      
+      <Pressable 
         style={styles.favoriteButton}
-        onPress={() => onToggleFavorite(item.id)}
+        onPress={handleFavoritePress}
+        hitSlop={{ top: 4, bottom: 4, left: 4, right: 4 }}
       >
         <Ionicons 
           name={isFavorited ? "heart" : "heart-outline"} 
           size={20} 
           color={isFavorited ? "#ff6b81" : "#666"} 
         />
-      </TouchableOpacity>
+      </Pressable>
 
-      {/* Product Image */}
+      
       <Image source={{ uri: item.image }} style={styles.productImage} />
-
-      {/* Info Section */}
       <View style={styles.productInfo}>
         <Text style={styles.productName} numberOfLines={2}>{item.name}</Text>
         <Text style={styles.productPrice}>{item.price}</Text>
 
-        {/* Rating */}
         <View style={styles.ratingContainer}>
           {[...Array(5)].map((_, index) => (
             <Ionicons 
@@ -38,14 +54,19 @@ export default function ProductCard({ item, isFavorited, onToggleFavorite, onAdd
           ))}
         </View>
 
-        {/* Add to Cart */}
-        <TouchableOpacity 
+        <Pressable 
           style={styles.addToCartButton}
-          onPress={() => onAddToCart(item.id)}
+          onPress={handleCartPress}
+          hitSlop={{ top: 4, bottom: 4, left: 4, right: 4 }}
         >
           <Ionicons name="cart-outline" size={18} color="#fff" />
-        </TouchableOpacity>
+        </Pressable>
       </View>
+
+      <Pressable 
+        style={styles.cardClickArea}
+        onPress={handleProductPress}
+      />
     </View>
   );
 }
@@ -66,14 +87,14 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 8,
     right: 8,
-    zIndex: 1,
+    zIndex: 20,
     backgroundColor: "#fff",
     borderRadius: 12,
     padding: 6,
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 2,
-    elevation: 2,
+    elevation: 10,
   },
   productImage: {
     width: "100%",
@@ -84,6 +105,7 @@ const styles = StyleSheet.create({
   },
   productInfo: {
     position: "relative",
+    zIndex: 15,
   },
   productName: {
     fontSize: 13,
@@ -105,14 +127,27 @@ const styles = StyleSheet.create({
   },
   addToCartButton: {
     position: "absolute",
-    bottom: 0,
-    right: 0,
+    bottom: 8,
+    right: 8,
     backgroundColor: "#f7c8d0",
     borderRadius: 20,
-    padding: 8,
+    width: 36,
+    height: 36,
+    justifyContent: "center",
+    alignItems: "center",
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 2,
-    elevation: 2,
+    elevation: 10,
+    zIndex: 20,
+  },
+  cardClickArea: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    borderRadius: 16,
+    zIndex: 5,
   },
 });
