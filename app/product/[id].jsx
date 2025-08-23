@@ -1,8 +1,9 @@
 // app/product/[id].jsx
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useCart } from '../context/CartContext';
 
 export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams();
@@ -10,16 +11,7 @@ export default function ProductDetailScreen() {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('Description');
   const [showCartOverlay, setShowCartOverlay] = useState(false);
-  const [cartItems, setCartItems] = useState([
-    {
-      id: id,
-      name: "Peach 70% Niacinamide Serum",
-      brand: "Anua",
-      price: "2,112.88 DA",
-      image: "https://via.placeholder.com/300",
-      quantity: 1
-    }
-  ]);
+  const { cartItems, addToCart: addItemToCart, removeFromCart, updateQuantity: updateCartQuantity } = useCart();
   
   const handleBack = () => {
     router.back(); 
@@ -29,44 +21,36 @@ export default function ProductDetailScreen() {
     setShowCartOverlay(!showCartOverlay);
   };
 
-  const removeFromCart = (itemId) => {
-    setCartItems(cartItems.filter(item => item.id !== itemId));
+  const handleRemoveFromCart = (itemId) => {
+    removeFromCart(itemId);
     if (cartItems.length === 1) {
       setShowCartOverlay(false);
     }
   };
 
-  const addToCart = () => {
-    const existingItem = cartItems.find(item => item.id === product.id);
-    if (existingItem) {
-      setCartItems(cartItems.map(item => 
-        item.id === product.id 
-          ? { ...item, quantity: item.quantity + quantity }
-          : item
-      ));
-    } else {
-      setCartItems([...cartItems, { 
-        ...product, 
-        quantity: quantity 
-      }]);
-    }
+  const handleAddToCart = () => {
+    addItemToCart(product, quantity);
+    setShowCartOverlay(true);
   };
 
-  const updateQuantity = (itemId, newQuantity) => {
+  const handleUpdateQuantity = (itemId, newQuantity) => {
     if (newQuantity <= 0) {
       removeFromCart(itemId);
       return;
     }
-    setCartItems(cartItems.map(item => 
-      item.id === itemId ? { ...item, quantity: newQuantity } : item
-    ));
+    updateCartQuantity(itemId, newQuantity);
+  };
+
+  const handleCheckout = () => {
+    setShowCartOverlay(false); // Close the overlay
+    router.push('/tabs/cart'); // Navigate to cart page
   };
   
   const product = {
     id: id,
     name: "Peach 70% Niacinamide Serum",
     brand: "Anua",
-    price: "2,112.88 DA",
+    price: 2112.88,  
     rating: 4.5,
     reviews: 100,
     image: "https://via.placeholder.com/300",
@@ -111,19 +95,19 @@ export default function ProductDetailScreen() {
                     <View style={styles.cartItemInfo}>
                       <Text style={styles.cartItemBrand}>{item.brand}</Text>
                       <Text style={styles.cartItemName}>{item.name}</Text>
-                      <Text style={styles.cartItemPrice}>{item.price}</Text>
+                      <Text style={styles.cartItemPrice}>{item.price.toFixed(2)} DA</Text>
                       <Text style={styles.quantityText}>Quantity: {item.quantity}</Text>
                     </View>
                     <TouchableOpacity 
                       style={styles.removeButton}
-                      onPress={() => removeFromCart(item.id)}
+                      onPress={() => handleRemoveFromCart(item.id)}
                     >
                       <Text style={styles.removeText}>Remove</Text>
                     </TouchableOpacity>
                   </View>
                 ))}
 
-                <TouchableOpacity style={styles.checkoutButton}>
+                <TouchableOpacity style={styles.checkoutButton} onPress={handleCheckout}>
                   <Text style={styles.checkoutText}>Checkout</Text>
                 </TouchableOpacity>
               </>
@@ -195,7 +179,7 @@ export default function ProductDetailScreen() {
 
       
       <View style={styles.actionBar}>
-        <Text style={styles.price}>{product.price}</Text>
+        <Text style={styles.price}>{product.price.toFixed(2)} DA</Text>
         <View style={styles.quantitySelector}>
           <TouchableOpacity onPress={() => setQuantity(Math.max(1, quantity - 1))}>
             <Ionicons name="remove" size={20} color="#333" />
@@ -205,7 +189,7 @@ export default function ProductDetailScreen() {
             <Ionicons name="add" size={20} color="#333" />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.addToCartButton} onPress={addToCart}>
+        <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
           <Text style={styles.addToCartText}>Add To Cart</Text>
         </TouchableOpacity>
       </View>

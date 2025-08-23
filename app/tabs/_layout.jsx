@@ -11,14 +11,14 @@ export default function TabsLayout() {
         tabBarInactiveTintColor: "#999",
         tabBarStyle: {
           backgroundColor: "#fff",
-          borderTopLeftRadius: 20,
-          borderTopRightRadius: 20,
+          borderTopLeftRadius: 10,
+          borderTopRightRadius: 10,
           height: 60,
           position: "absolute",
           bottom: 0,
           left: 0,
           right: 0,
-          elevation: 5,
+          elevation: 2,
         },
       }}
     >

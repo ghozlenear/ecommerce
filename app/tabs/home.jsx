@@ -1,7 +1,5 @@
-import { Ionicons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import { useState } from "react";
 import { FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { TextInput } from "react-native-web";
 import Carousel from "../components/Carousel";
 import Categories from "../components/Categories";
 import ProductCard from "../components/ProductCard";
@@ -28,10 +26,10 @@ export default function HomeScreen() {
     const product = products.find(p => p.id === productId);
     if (product) {
       if (favorites.some(item => item.id === productId)) {
-        // Remove from favorites
+       
         setFavorites(favorites.filter(item => item.id !== productId));
       } else {
-        // Add to favorites
+        
         setFavorites([...favorites, product]);
       }
     }
@@ -65,15 +63,6 @@ export default function HomeScreen() {
             source={require("../../assets/images/profilepic.png")}
             resizeMode="contain"
             style={styles.avatar}
-          />
-        </View>
-
-        <View style={styles.searchBox}>
-          <Ionicons name="search" size={20} color="#666" />
-          <TextInput
-            placeholder="Search"
-            placeholderTextColor="#777"
-            style={styles.input}
           />
         </View>
 
@@ -115,26 +104,41 @@ export default function HomeScreen() {
         </View>
 
         <View style={styles.tipsSection}>
-          <Text style={styles.sectionTitle}>Glow-Up Tips</Text>
-          <FlatList
-            data={[
-              { id: "1", title: "Stay Hydrated", tip: "Drink at least 2L of water daily", icon: "water-outline" },
-              { id: "2", title: "Skincare Routine", tip: "Cleanse, tone & moisturize twice a day", icon: "sparkles-outline" },
-              { id: "3", title: "Beauty Sleep", tip: "Get 7–8 hours of quality rest", icon: "moon-outline" },
-              { id: "4", title: "Eat Clean", tip: "Incorporate fruits & veggies in your diet", icon: "leaf-outline" },
-            ]}
-            keyExtractor={(item) => item.id}
-            scrollEnabled={false}
-            renderItem={({item}) => (
-              <View style={styles.tipCard}>
-                <View style={styles.tipHeader}>
-                  <Ionicons name={item.icon} size={24} color="#ff6b81" style={styles.tipIcon} />
-                  <Text style={styles.tipTitle}>{item.title}</Text>
-                </View>
-                <Text style={styles.tipText}>{item.tip}</Text>
+          <Text style={styles.sectionTitle}>Glow Up Tips</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <View style={styles.tipCard}>
+              <Image
+                source={{ uri: "https://via.placeholder.com/300x200" }}
+                style={styles.tipImage}
+              />
+              <View style={styles.tipContent}>
+                <Text style={styles.tipCategory}>SKINCARE</Text>
+                <Text style={styles.tipTitle}>Top Skincare</Text>
+                <Text style={styles.tipDescription}>Lorem ipsum dolor sit amet, consectetur adipt.</Text>
+                <TouchableOpacity>
+                  <Text style={styles.readMore}>Read More</Text>
+                </TouchableOpacity>
               </View>
-            )}
-          />
+            </View>
+
+            <View style={[styles.tipCard, { marginLeft: 15 }]}>
+              <Image
+                source={{ uri: "https://via.placeholder.com/300x200" }}
+                style={styles.tipImage}
+              />
+              <View style={styles.tipContent}>
+                <Text style={styles.tipCategory}>SKINCARE</Text>
+                <Text style={styles.tipTitle}>Leah Kateb</Text>
+                <Text style={styles.tipDescription}>Lorem ipsum dolor sit amet, consectetur adipt.</Text>
+                <TouchableOpacity>
+                  <Text style={styles.readMore}>Read More</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </ScrollView>
+          <TouchableOpacity style={styles.exploreButton}>
+            <Text style={styles.exploreButtonText}>Explore More Tips</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
@@ -176,27 +180,7 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     marginTop: 15,
   },
-  searchBox: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#F7C8D0",
-    opacity: 0.5,
-    shadowColor: "#333",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.35,
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    marginBottom: 20,
-  },
-  input: {
-    marginLeft: 10,
-    flex: 1,
-    fontSize: 16,
-    fontFamily: "System",
-    fontWeight: "500",
-    color: "#333",
-  },
+
   carouselSection: {
     marginBottom: 20,
   },
@@ -218,37 +202,66 @@ const styles = StyleSheet.create({
   },
   tipCard: {
     backgroundColor: "#fff",
-    borderRadius: 16,
-    padding: 18,
-    marginBottom: 15,
-    shadowColor: "#ff6b81",
+    borderRadius: 15,
+    width: 280,
+    overflow: 'hidden',
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
-    borderLeftWidth: 4,
-    borderLeftColor: "#ff6b81",
+    shadowRadius: 4,
+    elevation: 3,
+    marginBottom: 15,
   },
-  tipHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 6,
+  tipImage: {
+    width: '100%',
+    height: 200,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+    color: '#666',
   },
-  tipIcon: {
-    marginRight: 8,
+  tipContent: {
+    padding: 15,
+  },
+  tipCategory: {
+    fontSize: 12,
+    color: '#666',
+    marginBottom: 4,
+    fontWeight: '500',
   },
   tipTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#333",
+    marginBottom: 6,
+  },
+  tipDescription: {
+    fontSize: 14,
+    color: "#666",
+    lineHeight: 20,
+    marginBottom: 8,
+  },
+  readMore: {
+    color: '#333',
+    fontWeight: '600',
+    fontSize: 14,
+  },
+  exploreButton: {
+    backgroundColor: "#F7C8D0",
+    opacity: 0.80,
+    paddingVertical: 12,
+    paddingHorizontal: 25,
+    borderRadius: 12,
+    alignSelf: "center",
+    marginTop: 20,
+    borderWidth: 1,
+    borderColor: "#F7C8D0",
+    marginBottom: 60,
+  },
+  exploreButtonText: {
+    color: "#fff",
     fontSize: 16,
     fontFamily: "System",
     fontWeight: "700",
-    color: "#ff6b81",
-  },
-  tipText: {
-    fontSize: 14,
-    fontFamily: "System",
-    fontWeight: "400",
-    color: "#555",
-    lineHeight: 20,
-    paddingLeft: 32,
   },
   loadMoreButton: {
     backgroundColor: "#F7C8D0",

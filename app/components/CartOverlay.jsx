@@ -1,13 +1,20 @@
 import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
+import { useRouter } from 'expo-router';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useCart } from '../context/CartContext';
 
 export default function CartOverlay({ 
   visible, 
-  cartItems, 
-  onClose, 
-  onRemoveItem 
+  onClose
 }) {
+  const router = useRouter();
+  const { cartItems, removeFromCart } = useCart();
+
+  const handleCheckout = () => {
+    onClose(); 
+    router.push('/tabs/cart'); 
+  };
+
   if (!visible) return null;
 
   return (
@@ -29,19 +36,19 @@ export default function CartOverlay({
                 <View style={styles.cartItemInfo}>
                   <Text style={styles.cartItemBrand}>Brand</Text>
                   <Text style={styles.cartItemName}>{item.name}</Text>
-                  <Text style={styles.cartItemPrice}>{item.price}</Text>
+                  <Text style={styles.cartItemPrice}>{item.price.toFixed(2)} DA</Text>
                   <Text style={styles.quantityText}>Quantity: {item.quantity}</Text>
                 </View>
                 <TouchableOpacity 
                   style={styles.removeButton}
-                  onPress={() => onRemoveItem(item.id)}
+                  onPress={() => removeFromCart(item.id)}
                 >
                   <Text style={styles.removeText}>Remove</Text>
                 </TouchableOpacity>
               </View>
             ))}
 
-            <TouchableOpacity style={styles.checkoutButton}>
+            <TouchableOpacity style={styles.checkoutButton} onPress={handleCheckout}>
               <Text style={styles.checkoutText}>Checkout</Text>
             </TouchableOpacity>
           </>

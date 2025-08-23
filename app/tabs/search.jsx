@@ -1,9 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import { useState } from "react";
 import { FlatList, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import CartOverlay from "../components/CartOverlay"; // adjust path if needed
-import ProductCard from "../components/ProductCard"; // adjust path if needed
+import CartOverlay from "../components/CartOverlay";
+import ProductCard from "../components/ProductCard";
 
 
 export default function SearchScreen() {
