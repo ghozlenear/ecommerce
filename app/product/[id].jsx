@@ -42,8 +42,8 @@ export default function ProductDetailScreen() {
   };
 
   const handleCheckout = () => {
-    setShowCartOverlay(false); // Close the overlay
-    router.push('/tabs/cart'); // Navigate to cart page
+    setShowCartOverlay(false); 
+    router.push('/tabs/cart'); 
   };
   
   const product = {
