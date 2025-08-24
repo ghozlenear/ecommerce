@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import { Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useCart } from "../context/CartContext";
+import { formatPrice, parsePrice } from '../utils/price';
 
 export default function CartScreen() {
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
@@ -14,7 +15,7 @@ export default function CartScreen() {
   const [cvv, setCvv] = useState("");
   const { cartItems, updateQuantity, removeFromCart, clearCart } = useCart();
 
-  const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const subtotal = cartItems.reduce((sum, item) => sum + (parsePrice(item.price) * (item.quantity || 1)), 0);
   const discount = 0.00;
   const total = subtotal - discount;
 
@@ -33,7 +34,7 @@ export default function CartScreen() {
             <View style={styles.itemInfo}>
               <Text style={styles.itemName}>{item.name}</Text>
               <Text style={styles.itemDescription}>{item.description}</Text>
-              <Text style={styles.itemPrice}>{item.price.toFixed(2)} DZD</Text>
+              <Text style={styles.itemPrice}>{formatPrice(item.price)} DZD</Text>
             </View>
             <View style={styles.quantityContainer}>
               <TouchableOpacity 
@@ -64,15 +65,15 @@ export default function CartScreen() {
         <View style={styles.priceDetails}>
           <View style={styles.priceRow}>
             <Text style={styles.priceLabel}>Sub Total:</Text>
-            <Text style={styles.priceValue}>{subtotal.toFixed(2)} DZD</Text>
+            <Text style={styles.priceValue}>{formatPrice(subtotal)} DZD</Text>
           </View>
           <View style={styles.priceRow}>
             <Text style={styles.priceLabel}>Discount:</Text>
-            <Text style={styles.priceValue}>-{discount.toFixed(2)} DZD</Text>
+            <Text style={styles.priceValue}>-{formatPrice(discount)} DZD</Text>
           </View>
           <View style={[styles.priceRow, styles.totalRow]}>
             <Text style={styles.totalLabel}>Total:</Text>
-            <Text style={styles.totalAmount}>{total.toFixed(2)} DZD</Text>
+            <Text style={styles.totalAmount}>{formatPrice(total)} DZD</Text>
           </View>
         </View>
         <TouchableOpacity style={styles.checkoutBtn} onPress={() => setShowCheckoutModal(true)}>
@@ -132,7 +133,7 @@ export default function CartScreen() {
               <Ionicons name="chevron-forward" size={24} color="#666" />
             </TouchableOpacity>
 
-            <Text style={styles.totalAmount}>Total: {total.toFixed(2)} DA</Text>
+            <Text style={styles.totalAmount}>Total: {formatPrice(total)} DA</Text>
           </View>
         </View>
       </Modal>

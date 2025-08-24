@@ -1,21 +1,25 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { useRouter } from "expo-router";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function ProfileScreen() {
+  const router = useRouter();
+
+  const handleLogout = () => {
+    router.replace("../auth/login"); 
+  };
+
   return (
     <View style={styles.container}>
-      
       <Image
-          source={require("../../assets/images/profilepic.png")}
-          resizeMode="contain"
+        source={require("../../assets/images/profilepic.png")}
+        resizeMode="contain"
         style={styles.avatar}
       />
 
-      
       <Text style={styles.name}>Ghozlene</Text>
       <Text style={styles.email}>ghozlene@example.com</Text>
 
-      
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={handleLogout}>
         <Text style={styles.buttonText}>Log Out</Text>
       </TouchableOpacity>
     </View>

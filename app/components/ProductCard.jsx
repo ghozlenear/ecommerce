@@ -1,10 +1,13 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { useCart } from "../context/CartContext";
+import { useFavorites } from "../context/FavoritesContext";
 
-export default function ProductCard({ item, isFavorited, onToggleFavorite, onAddToCart }) {
+export default function ProductCard({ item, isFavorited: propFavorited, onToggleFavorite, onAddToCart }) {
   const router = useRouter();
+  const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
+  const { addToCart } = useCart();
 
   const handleProductPress = () => {
     console.log('Product card pressed, navigating to:', `/product/${item.id}`);
@@ -13,12 +16,32 @@ export default function ProductCard({ item, isFavorited, onToggleFavorite, onAdd
 
   const handleFavoritePress = () => {
     console.log('Favorite button pressed for product:', item.id);
-    onToggleFavorite(item.id);
+    // Always update the shared FavoritesContext so the Favorites screen stays in sync.
+    if (isFavorite(item.id)) {
+      removeFromFavorites(item.id);
+    } else {
+      addToFavorites(item);
+    }
+
+    // Also call parent-provided handler if present (keeps local screen state in sync).
+    if (typeof onToggleFavorite === 'function') {
+      try {
+        onToggleFavorite(item.id);
+      } catch (e) {
+        // ignore parent errors
+        console.warn('onToggleFavorite threw:', e);
+      }
+    }
   };
 
   const handleCartPress = () => {
     console.log('Cart button pressed for product:', item.id);
-    onAddToCart(item.id);
+    // If parent provided, call it; otherwise add via CartContext
+    if (typeof onAddToCart === 'function') {
+      onAddToCart(item.id);
+      return;
+    }
+    addToCart(item, 1);
   };
 
   return (
@@ -30,9 +53,9 @@ export default function ProductCard({ item, isFavorited, onToggleFavorite, onAdd
         hitSlop={{ top: 4, bottom: 4, left: 4, right: 4 }}
       >
         <Ionicons 
-          name={isFavorited ? "heart" : "heart-outline"} 
+          name={(typeof propFavorited !== 'undefined' ? propFavorited : isFavorite(item.id)) ? "heart" : "heart-outline"} 
           size={20} 
-          color={isFavorited ? "#ff6b81" : "#666"} 
+          color={(typeof propFavorited !== 'undefined' ? propFavorited : isFavorite(item.id)) ? "#ff6b81" : "#666"} 
         />
       </Pressable>
 

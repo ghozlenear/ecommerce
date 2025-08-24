@@ -4,6 +4,8 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useCart } from '../context/CartContext';
+import { useFavorites } from '../context/FavoritesContext';
+import { formatPrice } from '../utils/price';
 
 export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams();
@@ -12,6 +14,7 @@ export default function ProductDetailScreen() {
   const [activeTab, setActiveTab] = useState('Description');
   const [showCartOverlay, setShowCartOverlay] = useState(false);
   const { cartItems, addToCart: addItemToCart, removeFromCart, updateQuantity: updateCartQuantity } = useCart();
+  const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
   
   const handleBack = () => {
     router.back(); 
@@ -95,7 +98,7 @@ export default function ProductDetailScreen() {
                     <View style={styles.cartItemInfo}>
                       <Text style={styles.cartItemBrand}>{item.brand}</Text>
                       <Text style={styles.cartItemName}>{item.name}</Text>
-                      <Text style={styles.cartItemPrice}>{item.price.toFixed(2)} DA</Text>
+                      <Text style={styles.cartItemPrice}>{formatPrice(item.price)} DA</Text>
                       <Text style={styles.quantityText}>Quantity: {item.quantity}</Text>
                     </View>
                     <TouchableOpacity 
@@ -123,6 +126,22 @@ export default function ProductDetailScreen() {
       
       <View style={styles.imageSection}>
         <Image source={{ uri: product.image }} style={styles.productImage} />
+        <TouchableOpacity 
+          style={styles.favoriteButton}
+          onPress={() => {
+            if (isFavorite(product.id)) {
+              removeFromFavorites(product.id);
+            } else {
+              addToFavorites(product);
+            }
+          }}
+        >
+          <Ionicons 
+            name={isFavorite(product.id) ? "heart" : "heart-outline"} 
+            size={24} 
+            color={isFavorite(product.id) ? "#FF4C4C" : "#666"} 
+          />
+        </TouchableOpacity>
         <View style={styles.paginationDots}>
           {[1, 2, 3, 4, 5].map((dot, index) => (
             <View key={index} style={[styles.dot, index === 0 && styles.activeDot]} />
@@ -179,7 +198,7 @@ export default function ProductDetailScreen() {
 
       
       <View style={styles.actionBar}>
-        <Text style={styles.price}>{product.price.toFixed(2)} DA</Text>
+  <Text style={styles.price}>{formatPrice(product.price)} DA</Text>
         <View style={styles.quantitySelector}>
           <TouchableOpacity onPress={() => setQuantity(Math.max(1, quantity - 1))}>
             <Ionicons name="remove" size={20} color="#333" />
@@ -465,6 +484,22 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     alignItems: 'center',
     marginTop: 20,
+  },
+  favoriteButton: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   checkoutText: {
     color: '#fff',

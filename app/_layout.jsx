@@ -6,6 +6,7 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '../hooks/useColorScheme';
 import { CartProvider } from './context/CartContext';
+import { FavoritesProvider } from './context/FavoritesContext';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -21,15 +22,17 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <CartProvider>
-        <Stack>
-          <Stack.Screen name="splash" options={{ headerShown: false }} />
-          <Stack.Screen name="onboarding" options={{ headerShown: false }} />
-          <Stack.Screen name="auth" options={{headerShown: false}} />
-          <Stack.Screen name="tabs" options={{ headerShown: false }} />
-          <Stack.Screen name="product" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-        <StatusBar style="auto" />
+        <FavoritesProvider>
+          <Stack>
+            <Stack.Screen name="splash" options={{ headerShown: false }} />
+            <Stack.Screen name="onboarding" options={{ headerShown: false }} />
+            <Stack.Screen name="auth" options={{headerShown: false}} />
+            <Stack.Screen name="tabs" options={{ headerShown: false }} />
+            <Stack.Screen name="product" options={{ headerShown: false }} />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+          <StatusBar style="auto" />
+        </FavoritesProvider>
       </CartProvider>
     </ThemeProvider>
   );

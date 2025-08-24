@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useCart } from '../context/CartContext';
+import { formatPrice } from '../utils/price';
 
 export default function CartOverlay({ 
   visible, 
@@ -36,7 +37,7 @@ export default function CartOverlay({
                 <View style={styles.cartItemInfo}>
                   <Text style={styles.cartItemBrand}>Brand</Text>
                   <Text style={styles.cartItemName}>{item.name}</Text>
-                  <Text style={styles.cartItemPrice}>{item.price.toFixed(2)} DA</Text>
+                  <Text style={styles.cartItemPrice}>{formatPrice(item.price)} DA</Text>
                   <Text style={styles.quantityText}>Quantity: {item.quantity}</Text>
                 </View>
                 <TouchableOpacity 
