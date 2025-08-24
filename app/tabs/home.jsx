@@ -16,10 +16,10 @@ export default function HomeScreen() {
   const [cartItems, setCartItems] = useState([]);
 
   const products = [
-    { id: "1", name: "SKIN 1004 - Madagascar Centella Deep Cleansing Foam", price: "1,509.20 DA", image: "https://via.placeholder.com/150", rating: 5 },
-    { id: "2", name: "Anua Peach 70% Niacinamide Serum", price: "2,300.00 DA", image: "https://via.placeholder.com/150", rating: 4 },
-    { id: "3", name: "Vaseline Cocoa Radiant Gel Oil", price: "3,000.00 DA", image: "https://via.placeholder.com/150", rating: 5 },
-    { id: "4", name: "Chloé Rosa Damascena", price: "4,200.00 DA", image: "https://via.placeholder.com/150", rating: 4 },
+    { id: "1", name: "SKIN 1004 - Madagascar Centella Deep Cleansing Foam", price: "1,509.20 DA", image: require("../../assets/images/centella.png"), rating: 5 },
+    { id: "2", name: "Anua Peach 70% Niacinamide Serum", price: "2,300.00 DA", image: require("../../assets/images/anua.png"), rating: 4 },
+    { id: "3", name: "Vaseline Cocoa Radiant Gel Oil", price: "3,000.00 DA", image: require("../../assets/images/vasline.png"), rating: 5 },
+    { id: "4", name: "Chloé Rosa Damascena", price: "4,200.00 DA", image: require("../../assets/images/perfum.png"), rating: 4 },
   ];
 
   const toggleFavorite = (productId) => {

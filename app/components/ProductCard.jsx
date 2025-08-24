@@ -16,19 +16,17 @@ export default function ProductCard({ item, isFavorited: propFavorited, onToggle
 
   const handleFavoritePress = () => {
     console.log('Favorite button pressed for product:', item.id);
-    // Always update the shared FavoritesContext so the Favorites screen stays in sync.
     if (isFavorite(item.id)) {
       removeFromFavorites(item.id);
     } else {
       addToFavorites(item);
     }
 
-    // Also call parent-provided handler if present (keeps local screen state in sync).
+
     if (typeof onToggleFavorite === 'function') {
       try {
         onToggleFavorite(item.id);
       } catch (e) {
-        // ignore parent errors
         console.warn('onToggleFavorite threw:', e);
       }
     }
@@ -36,7 +34,6 @@ export default function ProductCard({ item, isFavorited: propFavorited, onToggle
 
   const handleCartPress = () => {
     console.log('Cart button pressed for product:', item.id);
-    // If parent provided, call it; otherwise add via CartContext
     if (typeof onAddToCart === 'function') {
       onAddToCart(item.id);
       return;

@@ -24,9 +24,7 @@ export default function FavoritesScreen() {
   const buySelected = () => {
     const selectedItems = favorites.filter(f => selected[f.id]);
     selectedItems.forEach(item => addToCart(item, 1));
-    // Clear selection after adding
     setSelected({});
-    // Navigate to cart to proceed to checkout
     router.push('/tabs/cart');
   };
 
