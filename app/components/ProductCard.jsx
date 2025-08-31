@@ -10,31 +10,30 @@ export default function ProductCard({ item, isFavorited: propFavorited, onToggle
   const { addToCart } = useCart();
 
   const handleProductPress = () => {
-    console.log('Product card pressed, navigating to:', `/product/${item.id}`);
+    console.log("Product card pressed, navigating to:", `/product/${item.id}`);
     router.push(`/product/${item.id}`);
   };
 
   const handleFavoritePress = () => {
-    console.log('Favorite button pressed for product:', item.id);
+    console.log("Favorite button pressed for product:", item.id);
     if (isFavorite(item.id)) {
       removeFromFavorites(item.id);
     } else {
       addToFavorites(item);
     }
 
-
-    if (typeof onToggleFavorite === 'function') {
+    if (typeof onToggleFavorite === "function") {
       try {
         onToggleFavorite(item.id);
       } catch (e) {
-        console.warn('onToggleFavorite threw:', e);
+        console.warn("onToggleFavorite threw:", e);
       }
     }
   };
 
   const handleCartPress = () => {
-    console.log('Cart button pressed for product:', item.id);
-    if (typeof onAddToCart === 'function') {
+    console.log("Cart button pressed for product:", item.id);
+    if (typeof onAddToCart === "function") {
       onAddToCart(item.id);
       return;
     }
@@ -43,38 +42,57 @@ export default function ProductCard({ item, isFavorited: propFavorited, onToggle
 
   return (
     <View style={styles.productCard}>
-      
-      <Pressable 
+      <Pressable
         style={styles.favoriteButton}
         onPress={handleFavoritePress}
         hitSlop={{ top: 4, bottom: 4, left: 4, right: 4 }}
       >
-        <Ionicons 
-          name={(typeof propFavorited !== 'undefined' ? propFavorited : isFavorite(item.id)) ? "heart" : "heart-outline"} 
-          size={20} 
-          color={(typeof propFavorited !== 'undefined' ? propFavorited : isFavorite(item.id)) ? "#ff6b81" : "#666"} 
+        <Ionicons
+          name={
+            (typeof propFavorited !== "undefined"
+              ? propFavorited
+              : isFavorite(item.id))
+              ? "heart"
+              : "heart-outline"
+          }
+          size={20}
+          color={
+            (typeof propFavorited !== "undefined"
+              ? propFavorited
+              : isFavorite(item.id))
+              ? "#ff6b81"
+              : "#666"
+          }
         />
       </Pressable>
 
-      
-      <Image source={{ uri: item.image }} style={styles.productImage} />
+      {/* ✅ Fixed line here */}
+      <Image source={item.image} style={styles.productImage} />
+
       <View style={styles.productInfo}>
-        <Text style={styles.productName} numberOfLines={2}>{item.name}</Text>
+        <Text style={styles.productName} numberOfLines={2}>
+          {item.name}
+        </Text>
         <Text style={styles.productPrice}>{item.price}</Text>
 
         <View style={styles.ratingContainer}>
           {[...Array(5)].map((_, index) => (
-            <Ionicons 
-              key={index} 
-              name={index < Math.floor(item.rating) ? "star" : 
-                    index < item.rating ? "star-half" : "star-outline"} 
-              size={14} 
-              color="#FFD700" 
+            <Ionicons
+              key={index}
+              name={
+                index < Math.floor(item.rating)
+                  ? "star"
+                  : index < item.rating
+                  ? "star-half"
+                  : "star-outline"
+              }
+              size={14}
+              color="#FFD700"
             />
           ))}
         </View>
 
-        <Pressable 
+        <Pressable
           style={styles.addToCartButton}
           onPress={handleCartPress}
           hitSlop={{ top: 4, bottom: 4, left: 4, right: 4 }}
@@ -83,10 +101,7 @@ export default function ProductCard({ item, isFavorited: propFavorited, onToggle
         </Pressable>
       </View>
 
-      <Pressable 
-        style={styles.cardClickArea}
-        onPress={handleProductPress}
-      />
+      <Pressable style={styles.cardClickArea} onPress={handleProductPress} />
     </View>
   );
 }

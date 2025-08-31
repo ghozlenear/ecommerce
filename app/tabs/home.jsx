@@ -4,15 +4,12 @@ import Carousel from "../components/Carousel";
 import Categories from "../components/Categories";
 import ProductCard from "../components/ProductCard";
 
-
-
-const categoriesData=[
+const categoriesData = [
   { title: "Skincare", icon: "happy-outline" },
   { title: "Haircare", icon: "cut-outline" },
   { title: "Bodycare", icon: "body-outline" },
   { title: "Fragrance", icon: "flask-outline" },
 ];
-
 
 export default function HomeScreen() {
   const [favorites, setFavorites] = useState([]);
@@ -29,10 +26,8 @@ export default function HomeScreen() {
     const product = products.find(p => p.id === productId);
     if (product) {
       if (favorites.some(item => item.id === productId)) {
-       
         setFavorites(favorites.filter(item => item.id !== productId));
       } else {
-        
         setFavorites([...favorites, product]);
       }
     }
@@ -43,8 +38,8 @@ export default function HomeScreen() {
     if (product) {
       const existingItem = cartItems.find(item => item.id === productId);
       if (existingItem) {
-        setCartItems(cartItems.map(item => 
-          item.id === productId 
+        setCartItems(cartItems.map(item =>
+          item.id === productId
             ? { ...item, quantity: item.quantity + 1 }
             : item
         ));
@@ -57,6 +52,7 @@ export default function HomeScreen() {
   return (
     <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
       <View style={styles.container}>
+        {/* Header */}
         <View style={styles.header}>
           <View>
             <Text style={styles.greeting}>Hello, Ghozlene</Text>
@@ -69,6 +65,7 @@ export default function HomeScreen() {
           />
         </View>
 
+        {/* Carousel */}
         <View style={styles.carouselSection}>
           <Carousel
             images={[
@@ -78,11 +75,13 @@ export default function HomeScreen() {
           />
         </View>
 
+        {/* Categories */}
         <View style={styles.categoriesSection}>
           <Text style={styles.sectionTitle}>Categories</Text>
           <Categories data={categoriesData} />
         </View>
 
+        {/* Products */}
         <View style={styles.productsSection}>
           <Text style={styles.sectionTitle}>Self-Care Spotlight</Text>
           <FlatList
@@ -100,12 +99,13 @@ export default function HomeScreen() {
             scrollEnabled={false}
             columnWrapperStyle={{ justifyContent: "space-between" }}
           />
-          
+
           <TouchableOpacity style={styles.loadMoreButton}>
             <Text style={styles.loadMoreText}>Load More</Text>
           </TouchableOpacity>
         </View>
 
+        {/* Tips */}
         <View style={styles.tipsSection}>
           <Text style={styles.sectionTitle}>Glow Up Tips</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -166,14 +166,12 @@ const styles = StyleSheet.create({
   },
   greeting: {
     fontSize: 28,
-    fontFamily: "System",
     fontWeight: "600",
     color: "#333",
     marginTop: 15,
   },
   subText: {
     fontSize: 14,
-    fontFamily: "System",
     fontWeight: "600",
     color: "#333",
   },
@@ -183,7 +181,6 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     marginTop: 15,
   },
-
   carouselSection: {
     marginBottom: 20,
   },
@@ -193,10 +190,9 @@ const styles = StyleSheet.create({
   productsSection: {
     marginBottom: 30,
   },
-  sectionTitle: { 
-    fontSize: 22, 
-    fontFamily: "System",
-    fontWeight: "800", 
+  sectionTitle: {
+    fontSize: 22,
+    fontWeight: "800",
     marginBottom: 16,
     color: "#2c3e50",
   },
@@ -207,7 +203,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 15,
     width: 280,
-    overflow: 'hidden',
+    overflow: "hidden",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -216,20 +212,20 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   tipImage: {
-    width: '100%',
+    width: "100%",
     height: 200,
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
-    color: '#666',
+    color: "#666",
   },
   tipContent: {
     padding: 15,
   },
   tipCategory: {
     fontSize: 12,
-    color: '#666',
+    color: "#666",
     marginBottom: 4,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   tipTitle: {
     fontSize: 18,
@@ -244,13 +240,13 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   readMore: {
-    color: '#333',
-    fontWeight: '600',
+    color: "#333",
+    fontWeight: "600",
     fontSize: 14,
   },
   exploreButton: {
     backgroundColor: "#F7C8D0",
-    opacity: 0.80,
+    opacity: 0.8,
     paddingVertical: 12,
     paddingHorizontal: 25,
     borderRadius: 12,
@@ -263,12 +259,11 @@ const styles = StyleSheet.create({
   exploreButtonText: {
     color: "#fff",
     fontSize: 16,
-    fontFamily: "System",
     fontWeight: "700",
   },
   loadMoreButton: {
     backgroundColor: "#F7C8D0",
-    opacity: 0.80,
+    opacity: 0.8,
     paddingVertical: 12,
     paddingHorizontal: 25,
     borderRadius: 12,
@@ -280,7 +275,6 @@ const styles = StyleSheet.create({
   loadMoreText: {
     color: "#fff",
     fontSize: 16,
-    fontFamily: "System",
     fontWeight: "700",
   },
 });

@@ -1,48 +1,31 @@
 import { Ionicons } from "@expo/vector-icons";
-import React from "react";
-import { ScrollView, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { FlatList, StyleSheet, Text, TouchableOpacity } from "react-native";
 
-export default function Categories({data}) {
-    return(
-        <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.categoriesContainer} >
-            {data.map((item, index) =>(
-                <TouchableOpacity key={index} style={styles.categoryCard}>
-                    <Ionicons name={item.icon} size={40} color="#49454F"/>
-                    <Text style={styles.categoryText}>{item.title}</Text>
-                </TouchableOpacity>
-            )
-            )}
-        </ScrollView>
-    );
+export default function Categories({ data }) {
+  return (
+    <FlatList
+      data={data}
+      horizontal
+      keyExtractor={(item, index) => index.toString()}
+      renderItem={({ item }) => (
+        <TouchableOpacity style={styles.categoryCard}>
+          <Ionicons name={item.icon} size={30} color="#333" />
+          <Text style={styles.categoryText}>{item.title}</Text>
+        </TouchableOpacity>
+      )}
+      showsHorizontalScrollIndicator={false}
+    />
+  );
 }
 
 const styles = StyleSheet.create({
-    categoriesContainer: {
-      marginBottom: 20,
-    },
-    categoryCard: {
-        width:85,
-        height:90,
-        backgroundColor: "#fde2e4",
-        paddingVertical: 15,
-        paddingHorizontal: 20,
-        borderRadius: 15,
-        alignItems: "center",
-        justifyContent: "center",
-        marginRight: 15,
-        shadowColor: "#000",
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 3,
-    },
-    categoryText: {
-      marginTop: 5,
-      fontSize: 14,
-      fontFamily: "System",
-      fontWeight: "600",
-      color: "#333",
-    },
-  });
+  categoryCard: {
+    alignItems: "center",
+    marginRight: 20,
+  },
+  categoryText: {
+    marginTop: 5,
+    fontSize: 14,
+    color: "#333",
+  },
+});
