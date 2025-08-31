@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const BASE_URL = 'http://localhost:8081/api';
+const BASE_URL = 'http://localhost:8080/api';
 
 // Test data
 const testUser = {
@@ -16,7 +16,7 @@ let authToken = '';
 async function testHealthCheck() {
   try {
     console.log(' Testing health check...');
-    const response = await axios.get('http://localhost:8081/health');
+    const response = await axios.get('http://localhost:8080/health');
     console.log(' Health check passed:', response.data);
   } catch (error) {
     console.error(' Health check failed:', error.message);
@@ -103,7 +103,7 @@ async function runTests() {
 // Check if server is running before testing
 async function checkServer() {
   try {
-    await axios.get('http://localhost:5000/health');
+    await axios.get('http://localhost:8080/health');
     console.log(' Server is running, starting tests...\n');
     await runTests();
   } catch (error) {

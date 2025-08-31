@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Image, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function SignupScreen() {
 	const router = useRouter();
@@ -14,7 +14,7 @@ export default function SignupScreen() {
 	const [loading, setLoading] = useState(false);
 
 	const handleSignup = async () => {
-		// Validation
+		
 		if (!formData.email || !formData.password || !formData.fullName || !formData.phoneNumber) {
 			Alert.alert('Error', 'Please fill in all fields');
 			return;
@@ -32,7 +32,7 @@ export default function SignupScreen() {
 
 		setLoading(true);
 		try {
-			const response = await fetch('http://localhost:5000/api/auth/signup', {
+			const response = await fetch('http://192.168.1.10:8080/api/auth/signup', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -67,6 +67,15 @@ export default function SignupScreen() {
 	};
 
 	return (
+		<KeyboardAvoidingView 
+		style={{ flex: 1, backgroundColor: "#fff" }} 
+		behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+	  >
+		<ScrollView 
+		  contentContainerStyle={styles.scrollContainer} 
+		  showsVerticalScrollIndicator={false}
+		>
+
 		<View style={styles.container}>
 			<View style={styles.header}>
 				<Image
@@ -145,10 +154,16 @@ export default function SignupScreen() {
 				</TouchableOpacity>
 			</View>
 		</View>
+		</ScrollView>
+		</KeyboardAvoidingView>
 	);
 }
 
 const styles = StyleSheet.create({
+	scrollContainer: {
+		flexGrow: 1,
+		paddingBottom: 40,
+	  },
 	container: {
 		flex: 1,
 		backgroundColor: '#FFFFFF',

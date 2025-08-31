@@ -8,7 +8,7 @@ Set your API base URL in your React Native app:
 
 ```typescript
 // config/api.ts
-export const API_BASE_URL = 'http://localhost:5000/api';
+export const API_BASE_URL = 'http://localhost:8080/api';
 export const API_TIMEOUT = 10000;
 ```
 
