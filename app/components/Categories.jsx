@@ -20,12 +20,25 @@ export default function Categories({ data }) {
 
 const styles = StyleSheet.create({
   categoryCard: {
+    width:85,
+    height:90,
+    backgroundColor: "#fde2e4",
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 15,
     alignItems: "center",
-    marginRight: 20,
+    justifyContent: "center",
+    marginRight: 15,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   categoryText: {
     marginTop: 5,
     fontSize: 14,
+    fontFamily: "System",
+    fontWeight: "600",
     color: "#333",
   },
 });
