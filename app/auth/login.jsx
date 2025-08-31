@@ -1,9 +1,50 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { Image, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useState } from 'react';
+import { Alert, Image, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function LoginScreen() {
     const router = useRouter();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const handleLogin = async () => {
+        if (!email || !password) {
+            Alert.alert('Error', 'Please fill in all fields');
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const response = await fetch('http://localhost:5000/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Store the token (you can use AsyncStorage later)
+                console.log('Login successful:', data.message);
+                console.log('User:', data.user.fullName);
+                console.log('Token:', data.token);
+                
+                // Navigate to home
+                router.push('/tabs/home');
+            } else {
+                Alert.alert('Login Failed', data.message || 'An error occurred');
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            Alert.alert('Error', 'Network error. Please check your connection.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -18,6 +59,8 @@ export default function LoginScreen() {
             <View style={styles.form}>
                 <Text style={styles.label}>Email</Text>
                 <TextInput
+                    value={email}
+                    onChangeText={setEmail}
                     placeholder="exemple@gmail.com"
                     placeholderTextColor="#B8B8B8"
                     style={styles.input}
@@ -27,6 +70,8 @@ export default function LoginScreen() {
 
                 <Text style={[styles.label, { marginTop: 16 }]}>Password</Text>
                 <TextInput
+                    value={password}
+                    onChangeText={setPassword}
                     placeholder="********"
                     placeholderTextColor="#B8B8B8"
                     style={styles.input}
@@ -38,8 +83,14 @@ export default function LoginScreen() {
                     <Text style={styles.forgotText}>Forgot password?</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.primaryButton} onPress={() => router.push('/tabs/home')}>
-                    <Text style={styles.primaryButtonText}>Login</Text>
+                <TouchableOpacity 
+                    style={[styles.primaryButton, loading && styles.primaryButtonDisabled]} 
+                    onPress={handleLogin}
+                    disabled={loading}
+                >
+                    <Text style={styles.primaryButtonText}>
+                        {loading ? 'Logging in...' : 'Login'}
+                    </Text>
                 </TouchableOpacity>
             </View>
 
@@ -59,7 +110,7 @@ export default function LoginScreen() {
             </View>
 
             <View style={styles.footerRow}>
-                <Text style={styles.footerText}>Don’t have an account? </Text>
+                <Text style={styles.footerText}>Don't have an account? </Text>
                 <TouchableOpacity onPress={() => router.push('/auth/signup')}>
                     <Text style={styles.linkText}>Sign up</Text>
                 </TouchableOpacity>
@@ -82,7 +133,6 @@ const styles = StyleSheet.create({
     logo: {
         width: 502,
         height: 313,
-        
     },
     form: {
         marginTop: 12,
@@ -136,6 +186,9 @@ const styles = StyleSheet.create({
                 elevation: 2,
             },
         }),
+    },
+    primaryButtonDisabled: {
+        opacity: 0.6,
     },
     primaryButtonText: {
         color: '#FFFFFF',
@@ -195,5 +248,3 @@ const styles = StyleSheet.create({
         color: '#F4A7B9',
     },
 });
-
-
