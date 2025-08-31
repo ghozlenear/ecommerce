@@ -6,6 +6,13 @@ import ProductCard from "../components/ProductCard";
 
 
 
+const categoriesData=[
+  { title: "Skincare", icon: "happy-outline" },
+  { title: "Haircare", icon: "cut-outline" },
+  { title: "Bodycare", icon: "body-outline" },
+  { title: "Fragrance", icon: "flask-outline" },
+];
+
 
 export default function HomeScreen() {
   const [favorites, setFavorites] = useState([]);
