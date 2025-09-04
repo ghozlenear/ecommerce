@@ -28,12 +28,11 @@ export default function LoginScreen() {
             const data = await response.json();
 
             if (response.ok) {
-                // Store the token (you can use AsyncStorage later)
+                
                 console.log('Login successful:', data.message);
                 console.log('User:', data.user.fullName);
                 console.log('Token:', data.token);
-                
-                // Navigate to home
+
                 router.push('/tabs/home');
             } else {
                 Alert.alert('Login Failed', data.message || 'An error occurred');
