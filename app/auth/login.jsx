@@ -17,7 +17,7 @@ export default function LoginScreen() {
 
         setLoading(true);
         try {
-            const response = await fetch('http://192.168.1.10:8080/api/auth/login', {
+            const response = await fetch('http://192.168.100.4:8080/api/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -109,7 +109,7 @@ export default function LoginScreen() {
             </View>
 
             <View style={styles.footerRow}>
-                <Text style={styles.footerText}>Don't have an account? </Text>
+                <Text style={styles.footerText}>Dont have an account? </Text>
                 <TouchableOpacity onPress={() => router.push('/auth/signup')}>
                     <Text style={styles.linkText}>Sign up</Text>
                 </TouchableOpacity>

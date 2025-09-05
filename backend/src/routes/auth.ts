@@ -64,26 +64,27 @@ router.post('/login', validateLogin, async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
 
-    // Check if user exists
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(401).json({
-        message: 'Invalid credentials'
-      });
+    // Vérification si l'email et mot de passe sont bien fournis
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required' });
     }
 
-    // Check password
+    // Récupérer l'utilisateur avec son mot de passe
+    const user = await User.findOne({ email }).select('+password');
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    // Vérifier le mot de passe
     const isPasswordValid = await user.comparePassword(password);
     if (!isPasswordValid) {
-      return res.status(401).json({
-        message: 'Invalid credentials'
-      });
+      return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    // Generate JWT token
+    // Générer le token
     const token = generateToken(user);
 
-    // Return user data (without password) and token
+    // Réponse sans mot de passe
     const userResponse = {
       _id: user._id,
       email: user.email,
@@ -93,19 +94,18 @@ router.post('/login', validateLogin, async (req: Request, res: Response) => {
       createdAt: user.createdAt
     };
 
-    res.json({
+    return res.json({
       message: 'Login successful',
       user: userResponse,
       token
     });
+
   } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({
+    return res.status(500).json({
       message: 'Server error during login'
     });
   }
 });
-
 // @route   GET /api/auth/me
 // @desc    Get current user profile
 // @access  Private
