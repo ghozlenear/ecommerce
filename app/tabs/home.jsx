@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useEffect, useState } from "react";
+import { FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from "react-native";
 import Carousel from "../components/Carousel";
 import Categories from "../components/Categories";
 import ProductCard from "../components/ProductCard";
@@ -14,19 +14,31 @@ const categoriesData = [
 export default function HomeScreen() {
   const [favorites, setFavorites] = useState([]);
   const [cartItems, setCartItems] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const products = [
-    { id: "1", name: "SKIN 1004 - Madagascar Centella Deep Cleansing Foam", price: "1,509.20 DA", image: require("../../assets/images/centella.png"), rating: 5 },
-    { id: "2", name: "Anua Peach 70% Niacinamide Serum", price: "2,300.00 DA", image: require("../../assets/images/anua.png"), rating: 4 },
-    { id: "3", name: "Vaseline Cocoa Radiant Gel Oil", price: "3,000.00 DA", image: require("../../assets/images/vasline.png"), rating: 5 },
-    { id: "4", name: "Chloé Rosa Damascena", price: "4,200.00 DA", image: require("../../assets/images/perfum.png"), rating: 4 },
-  ];
+  // Fetch products from backend
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch("http://192.168.100.4:8080/api/products"); // ⚡ adapte l’URL selon ton backend
+        const data = await res.json();
+        setProducts(data);
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   const toggleFavorite = (productId) => {
-    const product = products.find(p => p.id === productId);
+    const product = products.find(p => p._id === productId);
     if (product) {
-      if (favorites.some(item => item.id === productId)) {
-        setFavorites(favorites.filter(item => item.id !== productId));
+      if (favorites.some(item => item._id === productId)) {
+        setFavorites(favorites.filter(item => item._id !== productId));
       } else {
         setFavorites([...favorites, product]);
       }
@@ -34,12 +46,12 @@ export default function HomeScreen() {
   };
 
   const addToCart = (productId) => {
-    const product = products.find(p => p.id === productId);
+    const product = products.find(p => p._id === productId);
     if (product) {
-      const existingItem = cartItems.find(item => item.id === productId);
+      const existingItem = cartItems.find(item => item._id === productId);
       if (existingItem) {
         setCartItems(cartItems.map(item =>
-          item.id === productId
+          item._id === productId
             ? { ...item, quantity: item.quantity + 1 }
             : item
         ));
@@ -84,21 +96,29 @@ export default function HomeScreen() {
         {/* Products */}
         <View style={styles.productsSection}>
           <Text style={styles.sectionTitle}>Self-Care Spotlight</Text>
-          <FlatList
-            data={products}
-            renderItem={({ item }) => (
-              <ProductCard
-                item={item}
-                isFavorited={favorites.some(fav => fav.id === item.id)}
-                onToggleFavorite={toggleFavorite}
-                onAddToCart={addToCart}
-              />
-            )}
-            keyExtractor={(item) => item.id}
-            numColumns={2}
-            scrollEnabled={false}
-            columnWrapperStyle={{ justifyContent: "space-between" }}
-          />
+
+          {loading ? (
+            <ActivityIndicator size="large" color="#F7C8D0" />
+          ) : (
+            <FlatList
+              data={products}
+              renderItem={({ item }) => (
+                <ProductCard
+                  item={{
+                    ...item,
+                    price: `${item.price} DA`, // ⚡ format prix pour ton UI
+                  }}
+                  isFavorited={favorites.some(fav => fav._id === item._id)}
+                  onToggleFavorite={toggleFavorite}
+                  onAddToCart={addToCart}
+                />
+              )}
+              keyExtractor={(item) => item._id}
+              numColumns={2}
+              scrollEnabled={false}
+              columnWrapperStyle={{ justifyContent: "space-between" }}
+            />
+          )}
 
           <TouchableOpacity style={styles.loadMoreButton}>
             <Text style={styles.loadMoreText}>Load More</Text>

@@ -67,7 +67,8 @@ export default function ProductCard({ item, isFavorited: propFavorited, onToggle
       </Pressable>
 
       {/* ✅ Fixed line here */}
-      <Image source={item.image} style={styles.productImage} />
+      {/* Image du produit depuis MongoDB */}
+      <Image source={{ uri: item.image }} style={styles.productImage} />
 
       <View style={styles.productInfo}>
         <Text style={styles.productName} numberOfLines={2}>

@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import connectDB from './config/database';
 import authRoutes from './routes/auth';
+import productRoutes from "./routes/productRoutes";
 
 // Load environment variables
 dotenv.config();
@@ -24,6 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use("/api/products", productRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -58,4 +60,6 @@ app.listen(PORT, () => {
   console.log(`Auth endpoints: http://localhost:${PORT}/api/auth`);
 });
 
+
 export default app;
+

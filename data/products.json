@@ -1,0 +1,82 @@
+[
+  {
+    "name": "Hydrating Face Cream",
+    "description": "A lightweight moisturizer for daily use.",
+    "price": 2500,
+    "image": "https://www.bysmaquillage.fr/media/catalog/product/r/o/rouge-levres-essentiel-1_1.jpg",
+    "category": "Skincare",
+    "rating": 4.5
+  },
+  {
+    "name": "Vitamin C Serum",
+    "description": "Brightens skin and reduces dark spots.",
+    "price": 3200,
+    "image": "https://via.placeholder.com/300x400.png?text=Serum",
+    "category": "Skincare",
+    "rating": 4.8
+  },
+  {
+    "name": "Aloe Vera Gel",
+    "description": "Soothes irritated skin and hydrates.",
+    "price": 1800,
+    "image": "https://via.placeholder.com/300x400.png?text=Aloe+Vera",
+    "category": "Skincare",
+    "rating": 4.3
+  },
+  {
+    "name": "Shampoo Repair",
+    "description": "Strengthens damaged hair.",
+    "price": 2700,
+    "image": "https://via.placeholder.com/300x400.png?text=Shampoo",
+    "category": "Haircare",
+    "rating": 4.6
+  },
+  {
+    "name": "Conditioner Smooth",
+    "description": "Leaves hair silky and smooth.",
+    "price": 2600,
+    "image": "https://via.placeholder.com/300x400.png?text=Conditioner",
+    "category": "Haircare",
+    "rating": 4.7
+  },
+  {
+    "name": "Body Lotion",
+    "description": "Moisturizes and nourishes dry skin.",
+    "price": 2100,
+    "image": "https://via.placeholder.com/300x400.png?text=Body+Lotion",
+    "category": "Bodycare",
+    "rating": 4.4
+  },
+  {
+    "name": "Perfume Rose",
+    "description": "Elegant floral fragrance.",
+    "price": 5500,
+    "image": "https://via.placeholder.com/300x400.png?text=Perfume",
+    "category": "Fragrance",
+    "rating": 4.9
+  },
+  {
+    "name": "Hand Cream",
+    "description": "Hydrates hands and prevents dryness.",
+    "price": 1200,
+    "image": "https://via.placeholder.com/300x400.png?text=Hand+Cream",
+    "category": "Bodycare",
+    "rating": 4.2
+  },
+  {
+    "name": "Sunscreen SPF 50",
+    "description": "Protects against UVA/UVB rays.",
+    "price": 3000,
+    "image": "https://via.placeholder.com/300x400.png?text=Sunscreen",
+    "category": "Skincare",
+    "rating": 4.8
+  },
+  {
+    "name": "Hair Oil",
+    "description": "Nourishes hair and reduces frizz.",
+    "price": 2400,
+    "image": "https://via.placeholder.com/300x400.png?text=Hair+Oil",
+    "category": "Haircare",
+    "rating": 4.5
+  }
+]

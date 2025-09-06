@@ -1,8 +1,8 @@
 // app/product/[id].jsx
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useState, useEffect } from 'react';
+import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useCart } from '../context/CartContext';
 import { useFavorites } from '../context/FavoritesContext';
 import { formatPrice } from '../utils/price';
@@ -13,22 +13,34 @@ export default function ProductDetailScreen() {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('Description');
   const [showCartOverlay, setShowCartOverlay] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [product, setProduct] = useState(null);
+
   const { cartItems, addToCart: addItemToCart, removeFromCart, updateQuantity: updateCartQuantity } = useCart();
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
-  
-  const handleBack = () => {
-    router.back(); 
-  };
 
-  const toggleCartOverlay = () => {
-    setShowCartOverlay(!showCartOverlay);
-  };
+  // 👉 Fetch produit par ID depuis ton backend
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const res = await fetch(`http://192.168.100.4:8080/api/products/${id}`); // mets l’URL de ton API
+        const data = await res.json();
+        setProduct(data);
+      } catch (error) {
+        console.error("Erreur lors du fetch produit:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProduct();
+  }, [id]);
+
+  const handleBack = () => router.back();
+  const toggleCartOverlay = () => setShowCartOverlay(!showCartOverlay);
 
   const handleRemoveFromCart = (itemId) => {
     removeFromCart(itemId);
-    if (cartItems.length === 1) {
-      setShowCartOverlay(false);
-    }
+    if (cartItems.length === 1) setShowCartOverlay(false);
   };
 
   const handleAddToCart = () => {
@@ -45,25 +57,29 @@ export default function ProductDetailScreen() {
   };
 
   const handleCheckout = () => {
-    setShowCartOverlay(false); 
-    router.push('/tabs/cart'); 
+    setShowCartOverlay(false);
+    router.push('/tabs/cart');
   };
-  
-  const product = {
-    id: id,
-    name: "Peach 70% Niacinamide Serum",
-    brand: "Anua",
-    price: 2112.88,  
-    rating: 4.5,
-    reviews: 100,
-    image: "https://via.placeholder.com/300",
-    description: " Blah BLAH BLAH",
-    howToUse: "BLAH BLAH BLAH",
-    reviews: []
-  };
+
+  if (loading) {
+    return (
+      <View style={[styles.container, { justifyContent: "center", alignItems: "center" }]}>
+        <ActivityIndicator size="large" color="#f7c8d0" />
+      </View>
+    );
+  }
+
+  if (!product) {
+    return (
+      <View style={[styles.container, { justifyContent: "center", alignItems: "center" }]}>
+        <Text style={{ color: "#666" }}>Produit introuvable</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
+      {/* --- NAVBAR --- */}
       <View style={styles.navBar}>
         <TouchableOpacity style={styles.navButton} onPress={handleBack}>
           <Ionicons name="arrow-back" size={24} color="#333" />
@@ -79,77 +95,29 @@ export default function ProductDetailScreen() {
           )}
         </TouchableOpacity>
       </View>
-      {showCartOverlay && (
-        <View style={styles.overlay}>
-          <TouchableOpacity style={styles.overlayBackground} onPress={toggleCartOverlay} />
-          <View style={styles.cartOverlay}>
-            <View style={styles.cartHeader}>
-              <Text style={styles.cartTitle}>My Cart</Text>
-              <TouchableOpacity onPress={toggleCartOverlay}>
-                <Ionicons name="close" size={24} color="#333" />
-              </TouchableOpacity>
-            </View>
-            
-            {cartItems.length > 0 ? (
-              <>
-                {cartItems.map((item) => (
-                  <View key={item.id} style={styles.cartItem}>
-                    <Image source={{ uri: item.image }} style={styles.cartItemImage} />
-                    <View style={styles.cartItemInfo}>
-                      <Text style={styles.cartItemBrand}>{item.brand}</Text>
-                      <Text style={styles.cartItemName}>{item.name}</Text>
-                      <Text style={styles.cartItemPrice}>{formatPrice(item.price)} DA</Text>
-                      <Text style={styles.quantityText}>Quantity: {item.quantity}</Text>
-                    </View>
-                    <TouchableOpacity 
-                      style={styles.removeButton}
-                      onPress={() => handleRemoveFromCart(item.id)}
-                    >
-                      <Text style={styles.removeText}>Remove</Text>
-                    </TouchableOpacity>
-                  </View>
-                ))}
 
-                <TouchableOpacity style={styles.checkoutButton} onPress={handleCheckout}>
-                  <Text style={styles.checkoutText}>Checkout</Text>
-                </TouchableOpacity>
-              </>
-            ) : (
-              <View style={styles.emptyCart}>
-                <Text style={styles.emptyCartText}>Your cart is empty</Text>
-              </View>
-            )}
-          </View>
-        </View>
-      )}
-
-      
+      {/* --- IMAGE + FAVORI --- */}
       <View style={styles.imageSection}>
         <Image source={{ uri: product.image }} style={styles.productImage} />
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.favoriteButton}
           onPress={() => {
-            if (isFavorite(product.id)) {
-              removeFromFavorites(product.id);
+            if (isFavorite(product._id)) {
+              removeFromFavorites(product._id);
             } else {
               addToFavorites(product);
             }
           }}
         >
-          <Ionicons 
-            name={isFavorite(product.id) ? "heart" : "heart-outline"} 
-            size={24} 
-            color={isFavorite(product.id) ? "#FF4C4C" : "#666"} 
+          <Ionicons
+            name={isFavorite(product._id) ? "heart" : "heart-outline"}
+            size={24}
+            color={isFavorite(product._id) ? "#FF4C4C" : "#666"}
           />
         </TouchableOpacity>
-        <View style={styles.paginationDots}>
-          {[1, 2, 3, 4, 5].map((dot, index) => (
-            <View key={index} style={[styles.dot, index === 0 && styles.activeDot]} />
-          ))}
-        </View>
       </View>
 
-
+      {/* --- DETAILS --- */}
       <ScrollView style={styles.detailsSection}>
         <View style={styles.productHeader}>
           <View>
@@ -157,21 +125,19 @@ export default function ProductDetailScreen() {
             <Text style={styles.productName}>{product.name}</Text>
             <View style={styles.ratingContainer}>
               {[...Array(5)].map((_, index) => (
-                <Ionicons 
-                  key={index} 
-                  name={index < Math.floor(product.rating) ? "star" : "star-outline"} 
-                  size={16} 
-                  color="#FFD700" 
+                <Ionicons
+                  key={index}
+                  name={index < Math.floor(product.rating) ? "star" : "star-outline"}
+                  size={16}
+                  color="#FFD700"
                 />
               ))}
-              <Text style={styles.ratingText}>{product.rating} (+{product.reviews})</Text>
+              <Text style={styles.ratingText}>{product.rating} ({product.reviews} avis)</Text>
             </View>
           </View>
-          <TouchableOpacity style={styles.favoriteButton}>
-            <Ionicons name="heart-outline" size={24} color="#333" />
-          </TouchableOpacity>
         </View>
 
+        {/* --- TABS --- */}
         <View style={styles.tabs}>
           {['Description', 'How To Use', 'Reviews'].map((tab) => (
             <TouchableOpacity
@@ -186,19 +152,19 @@ export default function ProductDetailScreen() {
           ))}
         </View>
 
-        
+        {/* --- CONTENU --- */}
         <View style={styles.tabContent}>
           <Text style={styles.contentText}>
             {activeTab === 'Description' && product.description}
             {activeTab === 'How To Use' && product.howToUse}
-            {activeTab === 'Reviews' && 'Reviews content...'}
+            {activeTab === 'Reviews' && 'Avis des utilisateurs à venir...'}
           </Text>
         </View>
       </ScrollView>
 
-      
+      {/* --- ACTION BAR --- */}
       <View style={styles.actionBar}>
-  <Text style={styles.price}>{formatPrice(product.price)} DA</Text>
+        <Text style={styles.price}>{formatPrice(product.price)} DA</Text>
         <View style={styles.quantitySelector}>
           <TouchableOpacity onPress={() => setQuantity(Math.max(1, quantity - 1))}>
             <Ionicons name="remove" size={20} color="#333" />
